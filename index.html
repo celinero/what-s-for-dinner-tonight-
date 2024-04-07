@@ -3,10 +3,24 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>What's for dinner tonight ?</title>
     <script defer src="main.js"></script>
+    <link rel="stylesheet" href="styles.css" />
+    <title>The meal app</title>
   </head>
   <body>
-    <h1 class="title">What's for dinner tonight ?</h1>
+    <h1 class="title title_bg">What's for dinner tonight?</h1>
+    <!-- FORM -->
+    <form action="" class="recipe-search">
+      <input
+        class="search-term"
+        name="search-term"
+        type="text"
+        size="40"
+        placeholder="Search for a recipe"
+      />
+      <input class="submit" type="submit" size="30" value="Search" />
+    </form>
+
+    <div id="main"></div>
   </body>
 </html>
