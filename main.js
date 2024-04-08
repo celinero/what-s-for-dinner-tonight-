@@ -1,10 +1,26 @@
 // *********************** SEARCH FORM *************
 
-const form = document.querySelector(".recipe-search");
-const input = document.querySelector(".search-term");
+const form = document.querySelector("#recipeSearch");
+const input = document.querySelector("#searchTerm");
 const main = document.querySelector("#main");
+const ul = document.querySelector("#categoriesList");
 
-// ---
+const youtubeAPIURL = "https://www.googleapis.com/youtube/v3/search";
+const youtubeAPIKey = "AIzaSyA59ZCUWdZdii8_r4VGFAAAdDPAfujmVVs";
+
+// *************** FORM ************************
+
+const renderMeals = (meals) => {
+  main.innerHTML = "";
+
+  meals.forEach((meal) => {
+    main.innerHTML += `
+        <div class="recipe_card" data-idmeal="${meal.idMeal}">
+          <h3 class="title title_sm" href="#" >${meal.strMeal}</h3>
+          <img class="recipe_img" width="300" src="${meal.strMealThumb}">
+        </div>`;
+  });
+};
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -15,23 +31,40 @@ form.addEventListener("submit", async (e) => {
   );
   const data = await res.json();
 
-  main.innerHTML = "";
-
   if (data.meals) {
-    data.meals.forEach((meal) => {
-      main.innerHTML += `
-        <div class="recipe_card">
-          <h3 class="title title_sm" href="#" data-idmeal="${meal.idMeal}">${meal.strMeal}</h3>
-          <img class="recipe_img" src="${meal.strMealThumb}">
-        </div>`;
-    });
+    renderMeals(data.meals);
   } else {
     main.innerHTML = "no result";
   }
 });
 
 // **************************** RECIPE DETAILS ***********************
+// ***************** YOUTUBE API CALL ***************
 
+async function searchVideos(searchTerm) {
+  const params = {
+    q: searchTerm,
+    key: youtubeAPIKey,
+    part: "snippet",
+    type: "video",
+    safeSearch: "strict",
+    videoDuration: "long",
+    videoEmbeddable: true,
+    maxResults: 3,
+  };
+  const reqURL = `${youtubeAPIURL}?${new URLSearchParams(params)}`;
+  const res = await fetch(reqURL);
+  const data = await res.json();
+  // console.log(data);
+  data.items.forEach((item) => {
+    main.innerHTML += `
+     <iframe src="https://www.youtube.com/embed/${item.id.videoId}"></iframe>`;
+    console.log(item.id.videoId);
+  });
+  //   console.log(reqURL);
+}
+
+// ******************************
 async function showRecipeDetails(idMeal) {
   const res = await fetch(
     `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`
@@ -41,6 +74,11 @@ async function showRecipeDetails(idMeal) {
 
   console.log(recipeDetails);
 
+  // strYoutube is not working for the iframe
+  // because the url is as youtube.com/watch?v=12345
+  // and for the iframe it need to be youtube.com/embed/12345
+  // so we split strYoutube at "=" to extract the id
+  // and we recreate the embed url
   const strYoutubeArray = recipeDetails.strYoutube.split("=");
   const youtubeId = strYoutubeArray[1];
   const newYoutubeSrc = "https://www.youtube.com/embed/" + youtubeId;
@@ -55,6 +93,7 @@ async function showRecipeDetails(idMeal) {
     <ul>
   `;
 
+  // loop through the list of ingredients/measures as keys/values in array of meal
   for (let i = 1; i <= 20; i++) {
     const ingredient = recipeDetails["strIngredient" + i];
     const measure = recipeDetails["strMeasure" + i];
@@ -72,26 +111,69 @@ async function showRecipeDetails(idMeal) {
     </ul>
     <h4>Instructions</h4>
     <p>${recipeDetails.strInstructions}</p>
+    <h4>See more videos:</h4>
   `;
 
-  // main.innerHTML = `;
-  //  <h3 class=" title title_sm" href="#" data-idmeal="${recipeDetails.idMeal}">${recipeDetails.strMeal}</h3>
-  //   <iframe src="${newYoutubeSrc}"></iframe>
-  //   <p>Category: <a href="">${recipeDetails.strCategory}</a></p>
-  //   <ul>Ingredients</ul>
-  //   <li>${recipeDetails.strIngredient1}</li>
-  //   <li>${recipeDetails.strIngredient2}</li>
-  //   <li>${recipeDetails.strIngredient3}</li>
-  //   <h4>Instructions</h4>
-  //   <p>${recipeDetails.strInstructions}</p>
-  // `;
+  searchVideos(recipeDetails.strMeal);
 }
 
 document.addEventListener("click", async (e) => {
-  if (!e.target.dataset.idmeal) return;
+  const idMealParent = e.target.closest("[data-idmeal]");
 
-  const idMeal = e.target.dataset.idmeal;
+  if (!idMealParent) return;
+
+  const idMeal = idMealParent.dataset.idmeal;
+  console.log(idMeal);
 
   //add show class
   showRecipeDetails(idMeal);
+});
+
+// ************************* SIDEBAR WITH CATEGORIES ************************
+
+async function showCategories() {
+  const res = await fetch(
+    "https://www.themealdb.com/api/json/v1/1/categories.php"
+  );
+  const data = await res.json();
+
+  data.categories.forEach((category) => {
+    ul.innerHTML += `
+      <li class="category">
+        <a class="category_link" href="#">${category.strCategory}</a>
+      </li>
+      `;
+  });
+}
+
+showCategories();
+
+//  *********************** RECIPES BY CATEGORY in MAIN ****************
+
+async function showRecipesByCategory(category) {
+  const res = await fetch(
+    `https://www.themealdb.com/api/json/v1/1/filter.php?c=${category}`
+  );
+  const data = await res.json();
+
+  renderMeals(data.meals);
+}
+
+document.addEventListener("click", async (e) => {
+  if (e.target.className !== "category_link") return;
+  e.preventDefault();
+
+  const category = e.target;
+
+  // clean up
+  main.innerHTML = "";
+  const previousActived = document.querySelector(".active");
+  if (previousActived) {
+    previousActived.classList.remove("active");
+  }
+
+  // add active on the clicked category
+  category.classList.add("active");
+
+  showRecipesByCategory(category.textContent);
 });

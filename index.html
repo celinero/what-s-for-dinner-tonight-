@@ -10,8 +10,9 @@
   <body>
     <h1 class="title title_bg">What's for dinner tonight?</h1>
     <!-- FORM -->
-    <form action="" class="recipe-search">
+    <form action="" id="recipeSearch">
       <input
+        id="searchTerm"
         class="search-term"
         name="search-term"
         type="text"
@@ -20,7 +21,10 @@
       />
       <input class="submit" type="submit" size="30" value="Search" />
     </form>
-
+    <div class="categories">
+      <h2 class="title">Categories</h2>
+      <ul id="categoriesList"></ul>
+    </div>
     <div id="main"></div>
   </body>
 </html>
