@@ -1,12 +1,10 @@
-// *********************** SEARCH FORM *************
-
 const form = document.querySelector("#recipeSearch");
 const input = document.querySelector("#searchTerm");
 const main = document.querySelector("#main");
 const ul = document.querySelector("#categoriesList");
 
 const youtubeAPIURL = "https://www.googleapis.com/youtube/v3/search";
-const youtubeAPIKey = "AIzaSyA59ZCUWdZdii8_r4VGFAAAdDPAfujmVVs";
+const youtubeAPIKey = "AIzaSyA6AyD_n58wxF5kqXfjQnGNH0Zr7prMSCo";
 
 // *************** FORM ************************
 
