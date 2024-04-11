@@ -5,12 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script defer src="main.js"></script>
     <link rel="stylesheet" href="styles.css" />
-    <title>The meal app</title>
+    <link rel="icon" type="image/x-icon" href="./icon.png" />
+
+    <title>What's for dinner tonight?</title>
   </head>
   <body>
     <h1 class="title title_bg">What's for dinner tonight?</h1>
     <!-- FORM -->
-    <form action="" id="recipeSearch">
+    <form action="" class="recipe-search" id="recipeSearch">
       <input
         id="searchTerm"
         class="search-term"
@@ -21,10 +23,15 @@
       />
       <input class="submit" type="submit" size="30" value="Search" />
     </form>
-    <div class="categories">
-      <h2 class="title">Categories</h2>
-      <ul id="categoriesList"></ul>
+
+    <div class="container">
+      <!-- SIDEBAR -->
+      <div class="categories">
+        <h2 class="title title_md">Categories</h2>
+        <ul class="categories_list" id="categoriesList"></ul>
+      </div>
+      <!-- MAIN RECIPES -->
+      <div class="main" id="main"></div>
     </div>
-    <div id="main"></div>
   </body>
 </html>

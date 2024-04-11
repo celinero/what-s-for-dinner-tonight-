@@ -1,6 +1,7 @@
 const form = document.querySelector("#recipeSearch");
 const input = document.querySelector("#searchTerm");
 const main = document.querySelector("#main");
+
 const ul = document.querySelector("#categoriesList");
 
 const youtubeAPIURL = "https://www.googleapis.com/youtube/v3/search";
@@ -55,14 +56,19 @@ async function searchVideos(searchTerm) {
   const data = await res.json();
   // console.log(data);
   data.items.forEach((item) => {
-    main.innerHTML += `
+    recipeDetailsEl.innerHTML += `
      <iframe src="https://www.youtube.com/embed/${item.id.videoId}"></iframe>`;
-    console.log(item.id.videoId);
+    // console.log(item.id.videoId);
   });
   //   console.log(reqURL);
 }
 
 // ******************************
+const recipeDetailsEl = document.createElement("div");
+recipeDetailsEl.className = "recipe_details_card";
+const recipeInfo = document.createElement("div");
+recipeInfo.className = "recipe_info";
+
 async function showRecipeDetails(idMeal) {
   const res = await fetch(
     `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`
@@ -81,14 +87,17 @@ async function showRecipeDetails(idMeal) {
   const youtubeId = strYoutubeArray[1];
   const newYoutubeSrc = "https://www.youtube.com/embed/" + youtubeId;
 
-  main.innerHTML = "";
-  main.innerHTML += `
-    <h3 class=" title title_sm" href="#" data-idmeal="${recipeDetails.idMeal}">
+  recipeDetailsEl.innerHTML = "";
+  recipeDetailsEl.innerHTML += `
+   
+    <h2 class="title title_md" href="#" data-idmeal="${recipeDetails.idMeal}">
       ${recipeDetails.strMeal}
     </h3>
-    <iframe src="${newYoutubeSrc}"></iframe>
-    <p>Category: <a href="">${recipeDetails.strCategory}</a></p>
-    <ul>
+    <iframe class="recipe_video" src="${newYoutubeSrc}"></iframe>
+    <h4>Category:</h4> <a href="">${recipeDetails.strCategory}</a>
+    <div class="recipe_info">
+      <h4>Ingredients:</h4>
+      <ul>
   `;
 
   // loop through the list of ingredients/measures as keys/values in array of meal
@@ -97,7 +106,7 @@ async function showRecipeDetails(idMeal) {
     const measure = recipeDetails["strMeasure" + i];
 
     if (ingredient) {
-      main.innerHTML += `
+      recipeInfo.innerHTML += `
           <li>
             ${ingredient}: ${measure}
           </li>
@@ -105,14 +114,17 @@ async function showRecipeDetails(idMeal) {
     }
   }
 
-  main.innerHTML += `
-    </ul>
-    <h4>Instructions</h4>
-    <p>${recipeDetails.strInstructions}</p>
+  recipeDetailsEl.innerHTML += `
+      </ul>
+      <h4>Instructions</h4>
+      <p>${recipeDetails.strInstructions}</p>
+    </div>
     <h4>See more videos:</h4>
   `;
 
   searchVideos(recipeDetails.strMeal);
+  main.append(recipeDetailsEl);
+  recipeDetailsEl.append(recipeInfo);
 }
 
 document.addEventListener("click", async (e) => {
@@ -121,7 +133,10 @@ document.addEventListener("click", async (e) => {
   if (!idMealParent) return;
 
   const idMeal = idMealParent.dataset.idmeal;
-  console.log(idMeal);
+  // console.log(idMeal);
+
+  // clean up MAIN
+  main.innerHTML = "";
 
   //add show class
   showRecipeDetails(idMeal);

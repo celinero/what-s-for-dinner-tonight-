@@ -1,9 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  font-family: "Roboto", sans-serif;
+  color: rgb(99, 98, 95);
+}
+
+body {
+  margin: 50px;
+  background-image: url("./bkgd-img.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #cccccc;
+}
+
+.title {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.title_bg {
+  font-size: 3em;
+}
+
+.title_md {
+  font-size: 2em;
+}
+
+.title_sm {
+  font-size: 2em;
+}
+
+/************** FORM *****************/
+.recipe-search {
+  display: inline-block;
+  margin: 20px auto;
+}
+
 .search-term {
   padding: 20px;
   font-size: 1.5em;
+  border: 1px solid rgb(180, 164, 147);
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .submit {
   padding: 20px;
   font-size: 1.5em;
+  color: rgb(99, 98, 95);
+  background-color: rgba(120, 187, 106, 0.8);
+  border: 1px solid rgb(180, 164, 147);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.container {
+  display: flex;
+}
+
+/* **************** SIDEBAR **************** */
+
+.categories {
+  /* width: 25%; */
+  background-color: rgba(180, 164, 147, 0.3);
+  border: 1px solid transparent;
+  border-radius: 5px;
+}
+
+.categories_list {
+  list-style: none;
+}
+
+.category {
+  font-size: 30px;
+}
+
+.category_link {
+  text-decoration: none;
+  display: block;
+  padding: 15px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+}
+
+.category_link:hover {
+  border: 1px solid rgba(120, 187, 106, 0.8);
+  border-radius: 5px;
+  background-color: rgba(1232, 226, 220, 0.2);
+}
+
+.active {
+  background-color: rgba(120, 187, 106, 0.6);
+  border: 1px solid rgb(254, 252, 243);
+}
+
+/* ******************* MAIN RECIPES **************** */
+
+.main {
+  margin: 0 20px;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  flex-wrap: wrap;
+}
+
+.recipe_card {
+  padding: 24px 20px;
+  margin: 20px;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  background-color: white;
+  cursor: pointer;
+}
+
+.recipe_card:hover {
+  border: 2px solid rgba(120, 187, 106, 0.6);
+}
+
+.recipe_img {
+  width: 300px;
+  height: 300px;
+  border-radius: 10px;
+  display: block;
+  margin: 0 auto;
+}
+
+.recipe_details_card {
+  background-color: white;
+  border: 2px solid transparent;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.recipe_video {
+  display: block;
+  margin: 10px auto;
+}
+
+.recipe_info {
+  display: flex;
 }
