@@ -10,28 +10,32 @@
     <title>What's for dinner tonight?</title>
   </head>
   <body>
-    <h1 class="title title_bg">What's for dinner tonight?</h1>
-    <!-- FORM -->
-    <form action="" class="recipe-search" id="recipeSearch">
-      <input
-        id="searchTerm"
-        class="search-term"
-        name="search-term"
-        type="text"
-        size="40"
-        placeholder="Search for a recipe"
-      />
-      <input class="submit" type="submit" size="30" value="Search" />
-    </form>
-
-    <div class="container">
-      <!-- SIDEBAR -->
-      <div class="categories">
-        <h2 class="title title_md">Categories</h2>
-        <ul class="categories_list" id="categoriesList"></ul>
+    <div class="page">
+      <header class="header">
+        <h1 class="title title_bg">What's for dinner tonight?</h1>
+        <!-- FORM -->
+        <form action="" class="recipe-search" id="recipeSearch">
+          <input
+            id="searchTerm"
+            class="search-term"
+            name="search-term"
+            type="text"
+            placeholder="Search for a recipe"
+          />
+          <!-- <input class="submit" type="submit" size="30" value="Search" /> -->
+          <button class="submit" type="submit" value="Search">Search</button>
+        </form>
+      </header>
+      <div class="container">
+        <!-- SIDEBAR -->
+        <div class="categories">
+          <h2 class="title title_md">Categories</h2>
+          <ul class="categories_list" id="categoriesList"></ul>
+        </div>
+        <!-- MAIN RECIPES -->
+        <div class="main" id="main"></div>
       </div>
-      <!-- MAIN RECIPES -->
-      <div class="main" id="main"></div>
+      <footer class="footer"></footer>
     </div>
   </body>
 </html>
