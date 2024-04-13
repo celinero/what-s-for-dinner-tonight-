@@ -1,8 +1,7 @@
 const form = document.querySelector("#recipeSearch");
 const input = document.querySelector("#searchTerm");
 const main = document.querySelector("#main");
-
-const ul = document.querySelector("#categoriesList");
+const categoriesList = document.querySelector("#categoriesList");
 
 const youtubeAPIURL = "https://www.googleapis.com/youtube/v3/search";
 const youtubeAPIKey = "AIzaSyA6AyD_n58wxF5kqXfjQnGNH0Zr7prMSCo";
@@ -10,15 +9,19 @@ const youtubeAPIKey = "AIzaSyA6AyD_n58wxF5kqXfjQnGNH0Zr7prMSCo";
 // *************** FORM ************************
 
 const renderMeals = (meals) => {
-  main.innerHTML = "";
+  const recipes = document.createElement("div");
+  recipes.className = "recipes";
 
   meals.forEach((meal) => {
-    main.innerHTML += `
+    recipes.innerHTML += `
         <div class="recipe_card" data-idmeal="${meal.idMeal}">
           <h3 class="title title_sm" href="#" >${meal.strMeal}</h3>
           <img class="recipe_img" width="300" src="${meal.strMealThumb}">
         </div>`;
   });
+
+  main.innerHTML = "";
+  main.append(recipes);
 };
 
 form.addEventListener("submit", async (e) => {
@@ -33,9 +36,30 @@ form.addEventListener("submit", async (e) => {
   if (data.meals) {
     renderMeals(data.meals);
   } else {
-    main.innerHTML = "no result";
+    main.innerHTML = `
+      <p class="recommendation_info">No result</p>
+    `;
   }
 });
+
+// ********************** RECOMMENDATIONS **********************
+
+async function showRecommendation() {
+  const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
+  const data = await res.json();
+  console.log(data.meals);
+
+  main.innerHTML = `
+    <div class="recommendation_container">
+      <div class="recipe_card" data-idmeal="${data.meals[0].idMeal}">
+        <h2 class="title title_md">Some recommendations:</h2>
+        <h3 class="title title_sm" href="#" >${data.meals[0].strMeal}</h3>
+        <img class="recipe_img" width="300" src="${data.meals[0].strMealThumb}">
+      </div>
+    </div>
+  `;
+}
+showRecommendation();
 
 // **************************** RECIPE DETAILS ***********************
 // ***************** YOUTUBE API CALL ***************
@@ -54,20 +78,29 @@ async function searchVideos(searchTerm) {
   const reqURL = `${youtubeAPIURL}?${new URLSearchParams(params)}`;
   const res = await fetch(reqURL);
   const data = await res.json();
-  // console.log(data);
+
+  let html = `
+    <div class="recipe_extra_videos">`;
+
   data.items.forEach((item) => {
-    recipeDetailsEl.innerHTML += `
-     <iframe src="https://www.youtube.com/embed/${item.id.videoId}"></iframe>`;
-    // console.log(item.id.videoId);
+    html += `
+      <iframe src="https://www.youtube.com/embed/${item.id.videoId}"></iframe>`;
   });
-  //   console.log(reqURL);
+
+  html += `
+    </div>`;
+
+  return html;
 }
 
 // ******************************
-const recipeDetailsEl = document.createElement("div");
-recipeDetailsEl.className = "recipe_details_card";
-const recipeInfo = document.createElement("div");
-recipeInfo.className = "recipe_info";
+
+// const recipeVideoWrapper = document.querySelector(".recipe_video_wrapper");
+// const recipeCuisine = document.createElement("div");
+// recipeCuisine.className = "recipe_cuisine";
+
+// const recipeInfo = document.createElement("div");
+// recipeInfo.className = "recipe_info";
 
 async function showRecipeDetails(idMeal) {
   const res = await fetch(
@@ -87,44 +120,57 @@ async function showRecipeDetails(idMeal) {
   const youtubeId = strYoutubeArray[1];
   const newYoutubeSrc = "https://www.youtube.com/embed/" + youtubeId;
 
-  recipeDetailsEl.innerHTML = "";
-  recipeDetailsEl.innerHTML += `
-   
-    <h2 class="title title_md" href="#" data-idmeal="${recipeDetails.idMeal}">
-      ${recipeDetails.strMeal}
-    </h3>
-    <iframe class="recipe_video" src="${newYoutubeSrc}"></iframe>
-    <h4>Category:</h4> <a href="">${recipeDetails.strCategory}</a>
-    <div class="recipe_info">
-      <h4>Ingredients:</h4>
-      <ul>
+  let html = ``;
+  html += `
+    <div class="recipe_details_card">
+      <h2 class="title title_md" data-idmeal="${recipeDetails.idMeal}">
+        ${recipeDetails.strMeal}
+      </h2>
+      <div>
+        <iframe class="recipe_video" src="${newYoutubeSrc}"></iframe>
+      </div>
   `;
 
-  // loop through the list of ingredients/measures as keys/values in array of meal
+  if (recipeDetails.strArea) {
+    html += `
+      <div class="recipe_cuisine">
+        <p class="recipe_details">Cuisine: ${recipeDetails.strArea}</p>
+      </div>
+      <div class="recipe_info-wrapper">
+        <div>
+        <h4 class="recipe_details">Ingredients</h4>
+          <ul class="recipe_ingredients">`;
+  }
+
   for (let i = 1; i <= 20; i++) {
     const ingredient = recipeDetails["strIngredient" + i];
     const measure = recipeDetails["strMeasure" + i];
 
     if (ingredient) {
-      recipeInfo.innerHTML += `
-          <li>
-            ${ingredient}: ${measure}
-          </li>
+      html += `
+            <li class="recipe_details">
+              ${ingredient}: ${measure}
+            </li>
         `;
     }
   }
 
-  recipeDetailsEl.innerHTML += `
-      </ul>
-      <h4>Instructions</h4>
-      <p>${recipeDetails.strInstructions}</p>
-    </div>
-    <h4>See more videos:</h4>
-  `;
+  html += `
+          </ul>
+        </div>
+        <div class="recipe_instructions">
+          <h4 class="recipe_details">Instructions</h4>
+          <p class="recipe_details">${recipeDetails.strInstructions}</p>
+        </div>
+      </div>
+      <h4 class="recipe_details">Watch more videos:</h4>`;
 
-  searchVideos(recipeDetails.strMeal);
-  main.append(recipeDetailsEl);
-  recipeDetailsEl.append(recipeInfo);
+  const iframes = await searchVideos(recipeDetails.strMeal);
+
+  html += iframes;
+  html += `</div>`;
+
+  main.innerHTML = html;
 }
 
 document.addEventListener("click", async (e) => {
@@ -151,7 +197,7 @@ async function showCategories() {
   const data = await res.json();
 
   data.categories.forEach((category) => {
-    ul.innerHTML += `
+    categoriesList.innerHTML += `
       <li class="category">
         <a class="category_link" href="#">${category.strCategory}</a>
       </li>
