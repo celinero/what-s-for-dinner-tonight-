@@ -91,6 +91,16 @@ async function searchVideos(searchTerm) {
 
   return html;
 }
+// ************************** CLEAN UP Main *****************
+
+function cleanUpMain() {
+  main.innerHTML = "";
+  const previousActived = document.querySelector(".active");
+  console.log(previousActived);
+  if (previousActived) {
+    previousActived.classList.remove("active");
+  }
+}
 
 // ******************************
 
@@ -109,6 +119,8 @@ async function showRecipeDetails(idMeal) {
   const strYoutubeArray = recipeDetails.strYoutube.split("=");
   const youtubeId = strYoutubeArray[1];
   const newYoutubeSrc = "https://www.youtube.com/embed/" + youtubeId;
+
+  cleanUpMain();
 
   let html = ``;
   html += `
@@ -171,7 +183,7 @@ document.addEventListener("click", async (e) => {
   const idMeal = idMealParent.dataset.idmeal;
 
   // clean up MAIN
-  main.innerHTML = "";
+  cleanUpMain();
 
   //add show class
   showRecipeDetails(idMeal);
@@ -214,11 +226,7 @@ document.addEventListener("click", async (e) => {
   const category = e.target;
 
   // clean up
-  main.innerHTML = "";
-  const previousActived = document.querySelector(".active");
-  if (previousActived) {
-    previousActived.classList.remove("active");
-  }
+  cleanUpMain();
 
   // add active on the clicked category
   category.classList.add("active");
