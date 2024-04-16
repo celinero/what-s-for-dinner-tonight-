@@ -81,6 +81,10 @@ title--bg */
   cursor: pointer; /* outline */
 }
 /* ************************ MAIN *********************** */
+.main {
+  border-right: 1px solid rgb(120, 187, 106);
+}
+
 .container {
   display: grid;
   grid-template-columns: 1fr 3fr;
@@ -102,8 +106,8 @@ title--bg */
 .categories {
   padding: 30px 0;
   background-color: white;
-  border: 1px solid rgb(120, 187, 106);
-  border-radius: 5px;
+  border-right: 1px solid rgb(120, 187, 106);
+  border-left: 1px solid rgb(120, 187, 106);
 }
 
 .categories_list {
@@ -159,8 +163,7 @@ title--bg */
 .recipe_details_card {
   max-width: 100vw;
   background-color: white;
-  border: 2px solid rgba(120, 187, 106, 0.9);
-  border-radius: 5px;
+
   padding: 20px;
 }
 
@@ -229,7 +232,7 @@ title--bg */
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: 768px) {
   .recipes {
     grid-template-columns: repeat(2, 1fr);
   }

@@ -47,7 +47,6 @@ form.addEventListener("submit", async (e) => {
 async function showRecommendation() {
   const res = await fetch("https://www.themealdb.com/api/json/v1/1/random.php");
   const data = await res.json();
-  console.log(data.meals);
 
   main.innerHTML = `
     <div class="recommendation_container">
@@ -95,13 +94,6 @@ async function searchVideos(searchTerm) {
 
 // ******************************
 
-// const recipeVideoWrapper = document.querySelector(".recipe_video_wrapper");
-// const recipeCuisine = document.createElement("div");
-// recipeCuisine.className = "recipe_cuisine";
-
-// const recipeInfo = document.createElement("div");
-// recipeInfo.className = "recipe_info";
-
 async function showRecipeDetails(idMeal) {
   const res = await fetch(
     `https://www.themealdb.com/api/json/v1/1/lookup.php?i=${idMeal}`
@@ -109,13 +101,11 @@ async function showRecipeDetails(idMeal) {
   const data = await res.json();
   const recipeDetails = data.meals[0];
 
-  console.log(recipeDetails);
-
   // strYoutube is not working for the iframe
   // because the url is as youtube.com/watch?v=12345
   // and for the iframe it need to be youtube.com/embed/12345
-  // so we split strYoutube at "=" to extract the id
-  // and we recreate the embed url
+  // so I split strYoutube at "=" to extract the id
+  // and recreate the embed url
   const strYoutubeArray = recipeDetails.strYoutube.split("=");
   const youtubeId = strYoutubeArray[1];
   const newYoutubeSrc = "https://www.youtube.com/embed/" + youtubeId;
@@ -179,7 +169,6 @@ document.addEventListener("click", async (e) => {
   if (!idMealParent) return;
 
   const idMeal = idMealParent.dataset.idmeal;
-  // console.log(idMeal);
 
   // clean up MAIN
   main.innerHTML = "";
