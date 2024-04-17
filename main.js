@@ -4,7 +4,7 @@ const main = document.querySelector("#main");
 const categoriesList = document.querySelector("#categoriesList");
 
 const youtubeAPIURL = "https://www.googleapis.com/youtube/v3/search";
-const youtubeAPIKey = APIKEY;
+const youtubeAPIKey = "AIzaSyC_oDC6lyUMVcz9pP430GQSzii8ozrs1-g";
 
 // *************** FORM ************************
 
