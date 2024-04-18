@@ -6,7 +6,7 @@ const categoriesList = document.querySelector("#categoriesList");
 const youtubeAPIURL = "https://www.googleapis.com/youtube/v3/search";
 const youtubeAPIKey = "AIzaSyC_oDC6lyUMVcz9pP430GQSzii8ozrs1-g";
 
-// *************** FORM ************************
+// ************************* RECIPE CARD ****************************
 
 const renderMeals = (meals) => {
   const recipes = document.createElement("div");
@@ -14,15 +14,27 @@ const renderMeals = (meals) => {
 
   meals.forEach((meal) => {
     recipes.innerHTML += `
-        <div class="recipe_card" data-idmeal="${meal.idMeal}">
-          <h3 class="title title_sm" href="#" >${meal.strMeal}</h3>
-          <img class="recipe_img" width="300" src="${meal.strMealThumb}">
-        </div>`;
+    <div class="recipe_card" data-idmeal="${meal.idMeal}">
+    <h3 class="title title_sm" href="#" >${meal.strMeal}</h3>
+    <img class="recipe_img" width="300" src="${meal.strMealThumb}">
+    </div>`;
   });
 
   main.innerHTML = "";
   main.append(recipes);
 };
+
+// ************************** CLEAN UP Main *****************
+
+function cleanUpMain() {
+  main.innerHTML = "";
+  const previousActived = document.querySelector(".active");
+  if (previousActived) {
+    previousActived.classList.remove("active");
+  }
+}
+
+// *************** FORM ********************************
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -91,16 +103,6 @@ async function searchVideos(searchTerm) {
 
   return html;
 }
-// ************************** CLEAN UP Main *****************
-
-function cleanUpMain() {
-  main.innerHTML = "";
-  const previousActived = document.querySelector(".active");
-  console.log(previousActived);
-  if (previousActived) {
-    previousActived.classList.remove("active");
-  }
-}
 
 // ******************************
 
@@ -110,6 +112,7 @@ async function showRecipeDetails(idMeal) {
   );
   const data = await res.json();
   const recipeDetails = data.meals[0];
+  console.log(recipeDetails);
 
   // strYoutube is not working for the iframe
   // because the url is as youtube.com/watch?v=12345
@@ -190,6 +193,7 @@ document.addEventListener("click", async (e) => {
 });
 
 // ************************* SIDEBAR WITH CATEGORIES ************************
+// fetch automatically when page is loaded
 
 async function showCategories() {
   const res = await fetch(
@@ -209,6 +213,7 @@ async function showCategories() {
 showCategories();
 
 //  *********************** RECIPES BY CATEGORY in MAIN ****************
+// it will be fetch when user click on one of the category
 
 async function showRecipesByCategory(category) {
   const res = await fetch(
